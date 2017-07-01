@@ -35,7 +35,7 @@ class TaskManager {
    * @returns {?Object}
    */
   static addByURL (url) {
-    // fix url if it's missing protocol
+    // fix url if there is protocol missing
     if (!_.startsWith(url, 'vr:') && !/^https?:\/\//.test(url)) {
       url = 'http://' + url
     }
@@ -64,10 +64,16 @@ class TaskManager {
     }
   }
 
+  /**
+   * Remove single task
+   * @param {string} urls
+   */
   static bulkImportUrls (urls) {
-    urls.forEach(function (url) {
-      TaskManager.addByURL(url);
+    let any =  false
+    urls.forEach(url => {
+      if (TaskManager.addByURL(url)) any = true;
     });
+    return any;
   }
 
   /**
@@ -85,6 +91,19 @@ class TaskManager {
       store.notify()
     })
   }
+
+  /**
+   * Remove single task
+   * @param {Object|number} taskOrId
+   */
+  static makelog (taskOrId) {
+    withTasks(taskOrId, (task) => {
+      const taskIndex = tasks.indexOf(task.$id)
+      const taskdata  = registry.workersByType[task.type].GenTree(task.$id)
+      store.buss.emit('write-Log', {name: `${task.title}.log`,data: taskdata})
+    })
+  }
+
 
   /**
    * Start single task
