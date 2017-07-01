@@ -1,6 +1,6 @@
 'use strict'
 
-const _ = require('lodash')
+const _ = require('lodash')           // _.compact is used from there
 const qRequest = require('../tools/qRequest')
 const AbstractAlbumWorker = require('./AbstractAlbumWorker')
 const store = require('../store')
@@ -44,6 +44,7 @@ class Chan4Worker extends AbstractAlbumWorker {
       }))
       task.subject = posts[0].sub || ''
       task.title = `4chan /${task.board}/${task.id} ${task.subject}`
+      task.dest = [(settings.forumFolder) ? '4chan':'' ,this.makeFolderName(task)]
       return this.afterPreload(task, pics)
     })
   }
