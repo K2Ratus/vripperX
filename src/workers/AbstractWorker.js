@@ -7,6 +7,7 @@ const settings = store.data._
 /**
  * Task workflow
  * beforeCreate -> create -> prepare ->
+ * @class
  */
 class AbstractWorker {
   static get type () { return 'Abstract' }
@@ -76,16 +77,18 @@ class AbstractWorker {
     }
   }
 
+  // retrieve data for loading
   static preload (task) {
     return Promise.resolve(task)
   }
 
+  // load data and start them
   static load (task, force) {
     // do nothing, redefine!
   }
 
   /**
-   * @param {number} $id
+    * @param {number} $id - Task ID
    */
   static removeById ($id) {
     const task = store.getItem($id)
@@ -98,6 +101,24 @@ class AbstractWorker {
       }
       store.removeItem($id)
     }
+  }
+
+  /**
+   * @param {number} $id - Task ID
+   * @returns {Object} Object of desired item with populated tree
+   */
+  static makeTree ($id) {
+    const task = store.getItem($id)
+    const state = Object.assign({}, task) // copy of task or just {}
+    if (task) {
+      if (Array.isArray(state.$sub)) {
+        for (let $subIx in state.$sub) {
+          const $subId = state.$sub[$subIx]
+          state[$subIx] = WorkerRegistry.forId($subId).makeTree($subId)
+        }
+      }
+    }
+    return state
   }
 
   static initStatCounter () {
