@@ -8,11 +8,22 @@ const store = require('../store')
 const settings = store.data._
 
 function makeThreadDest (thread, suffix){
+  const gext = {'.tv':1,'.cc':1,'.co':1,'.sk':1,'.de':1,'.jp':1,'.eu':1,'.com':1, '.net':1, '.xxx':1}  
   const {id, title, forum} = thread
-  let page = thread.page ? '_' + thread.page : ''
+  const page = thread.page ? '_' + thread.page : ''
   const prefix = settings.prefixMain ? `vg${id}${page} ` : ''
   const forumsub = settings.forumFolder ? forum : ''
-  return save.makePath(store.data._.root, [forumsub, prefix + title + suffix])
+  const folders = [forumsub]
+  // Get site prefix from title
+  const titleParts = /(^[^\s]+)[-\s]+(.+)/.exec(title)
+  // get site last part (extension)
+  const extension = titleParts ? titleParts[1].match(/\.[a-z0-9]{2,3}$/) : null
+  if (settings.sitePrefixSep && extension && gext[extension[0]]){
+    folders.push(titleParts[1], prefix + (settings.sitePrefixCut ? titleParts[2] : title) + suffix)
+  } else {
+    folders.push(prefix + title + suffix)
+  }
+  return save.makePath(store.data._.root, folders)
 }
 
 function makePostDest (onePost, threadDest, postobj) {
