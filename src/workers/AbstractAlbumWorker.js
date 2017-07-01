@@ -27,7 +27,7 @@ class AbstractAlbumWorker extends AbstractWorker {
       pErr: 0,
       pTotal: pics.length,
       dest: save.makePath(settings.root,
-        [this.makeFolderName(task)]),
+        (task.dest)?task.dest:[this.makeFolderName(task)]),
       $sub: pics.map((pic, index) => {
         const prefix = makeFilePrefix(index, pics.length)
         return ImgWorker.create({
