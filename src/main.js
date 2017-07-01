@@ -91,6 +91,8 @@ defaults(store.data._, {
   ignoreDouble: false,
   forumFolder: false,
   suffixPost: false,
+  sitePrefixSep: true,
+  sitePrefixCut: false,  
   subfolders: true,
   vgCookies: null
 })
