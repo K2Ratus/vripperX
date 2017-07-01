@@ -38,6 +38,9 @@ class ImgHostingWorker extends AbstractWorker {
     ImageHosting(task.origin, task.thumb, settings.originalName).then((file) => {
       task.src = file.src
       task.name = file.name
+      task.lastmod = file.mod || null
+      task.length = file.length || file.data.length
+      task.crc32 = file.crc32 || null
 
       return save({
         prefix: settings.prefixFile ? task.prefix : '',
