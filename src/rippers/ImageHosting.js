@@ -99,7 +99,8 @@ const noHTTPS = [
   'pimpandhost',
   'picsee',
   'imagezilla',
-  'imagebam'
+  'imagebam',
+  'chronos'
 ]
 
 /**
