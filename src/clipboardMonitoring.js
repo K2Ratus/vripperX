@@ -18,7 +18,9 @@ function checkClipboard () {
   const newClip = readClip()
   if (newClip !== lastClip) {
     lastClip = newClip
-    if (TaskManager.addByURL(newClip) && os.platform() == 'darwin') {
+    const urls = newClip.length > 0 ? newClip.match(/https?:\/\/[^\s\\]+/g) : []
+    console.log(`urls.length = ${urls.length}`)
+    if (TaskManager.bulkImportUrls(urls) && os.platform() == 'darwin') {
       const bounceId = app.dock.bounce('informational')
       setTimeout(() => app.dock.cancelBounce(bounceId), 3000)
     }
