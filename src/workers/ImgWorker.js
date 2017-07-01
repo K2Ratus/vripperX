@@ -36,6 +36,10 @@ class ImgWorker extends AbstractWorker {
       url: task.src
     }).then((file) => {
       task.name = task.name || file.name
+      task.lastmod = file.mod || null
+      task.length = file.length || file.data.length
+      task.crc32 = file.crc32 || null
+
       // ensure extension
       if (file.ext && !/\.\w{3,5}$/.test(task.name)) {
         task.name += '.' + file.ext
