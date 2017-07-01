@@ -2,7 +2,8 @@
 
 const fs = require('fs')
 const path = require('path')
-const mkdirp = require('mkdirp')
+//const mkdirp = require('mkdirp')
+const mkdirp = require('./mymkdirp')
 const cleanFilename = require('./cleanFilename')
 
 /**
@@ -23,7 +24,7 @@ const makePath = (root, folders) => {
  * @returns {Promise.<string>} if success, Path to saved file (absolute) else err object
  */
 const save = (file, dest) => new Promise((resolve, reject) => {
-  mkdirp(dest, (err) => {
+  mkdirp(dest,'0777', (err) => {
     if (err) {
       return reject({
         source: 'save.js/save: mkdirp cb error',
