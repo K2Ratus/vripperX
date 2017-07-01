@@ -105,6 +105,8 @@ class Store {
 }
 
 const saveToFile = (filePath) => {
+  const storeToJson = Date.prototype.toJSON;
+  Date.prototype.toJSON = Date.prototype.valueOf;
   try {
     fs.writeFileSync(filePath, zlib.gzipSync(
       // do not save null values
@@ -118,6 +120,7 @@ const saveToFile = (filePath) => {
   } catch (err) {
     console.warn(err)
   }
+  Date.prototype.toJSON = storeToJson;
 }
 
 const loadFromFile = (filePath) => {
