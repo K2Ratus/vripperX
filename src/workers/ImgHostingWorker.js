@@ -2,7 +2,8 @@
 
 const AbstractWorker = require('./AbstractWorker')
 const store = require('../store')
-const ImageHosting = require('../rippers/ImageHosting')
+const ImageHostingA = require('../rippers/ImageHosting')
+const ImageHostingB = require('../rippers/ImageHosting2')
 const save = require('../tools/save')
 const settings = store.data._
 
@@ -32,6 +33,8 @@ class ImgHostingWorker extends AbstractWorker {
       err: null
     })
 
+    const ImageHosting = settings.useHostsList ? ImageHostingB : ImageHostingA
+    
     ImageHosting(task.origin, task.thumb, settings.originalName).then((file) => {
       task.src = file.src
       task.name = file.name
