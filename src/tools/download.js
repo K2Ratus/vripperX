@@ -1,23 +1,23 @@
-'use strict'
+'use strict';
 
-const qRequest = require('./qRequest')
-const trim = require('lodash/trim')
-const last = require('lodash/last')
-const fileType = require('file-type')
+const qRequest = require('./qRequest');
+const trim = require('lodash/trim');
+const last = require('lodash/last');
+const fileType = require('file-type');
 /**
  * Get filename from Content-Disposition header
  * @param {Object} headers
  * @returns {?string}
  */
 const getFilenameFromHeaders = (headers) => {
-  const contentDisposition = headers['content-disposition']
+  const contentDisposition = headers['content-disposition'];
   if (contentDisposition) {
-    const chunks = contentDisposition.split('filename=')
+    const chunks = contentDisposition.split('filename=');
     if (chunks.length === 2) {
-      return trim(chunks[1], '"')
+      return trim(chunks[1], '"');
     }
   }
-}
+};
 
 /**
  * Get last part of path
@@ -25,7 +25,7 @@ const getFilenameFromHeaders = (headers) => {
  * @param {string} path
  * @returns {string}
  */
-const getFilenameFromPath = (path) => last(path.split('/'))
+const getFilenameFromPath = (path) => last(path.split('/'));
 
 /**
  * @param {Object} options
@@ -34,23 +34,23 @@ const getFilenameFromPath = (path) => last(path.split('/'))
  * @returns {Promise.<{data: string|Buffer, name: string, ext: string, src: string}>}
  */
 const download = (options, priority) => {
-  options.encoding = null
+  options.encoding = null;
   return qRequest(options, priority || 100).then((resp) => {
     if (resp.body.length < 10000) {
-      return Promise.reject(`File too small, probably dummy, ${options.url}`)
+      return Promise.reject(`File too small, probably dummy, ${options.url}`);
     }
-    const filename = getFilenameFromHeaders(resp.headers) || getFilenameFromPath(resp.request.path)
-    const type = fileType(resp.body) 
+    const filename = getFilenameFromHeaders(resp.headers) || getFilenameFromPath(resp.request.path);
+    const type = fileType(resp.body);
     if (!type) {
-      return Promise.reject(`Unknown file type, ${options.url}`)
+      return Promise.reject(`Unknown file type, ${options.url}`);
     }
     return {
       data: resp.body,
       name: filename,
       ext: type && type.ext,
       src: resp.request.href
-    }
-  })
-}
+    };
+  });
+};
 
-module.exports = download
+module.exports = download;

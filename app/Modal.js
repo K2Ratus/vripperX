@@ -1,25 +1,21 @@
-'use strict'
+'use strict';
 
-require('./styles/modal.css')
-const React = require('react')
-const cn = require('./cn')
+require('./styles/modal.css');
+const React = require('react');
+const cn = require('./cn');
 
 class Modal extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   render() {
     return (
-      <div
-        className={cn('app_modal', { visible: this.props.visible })}
-        onClick={this.props.toggleVisibility}>
-        {this.props.visible &&
-          this.props.children
-        }
+      <div className={cn('app_modal', { visible: this.props.visible })} onClick={this.props.toggleVisibility}>
+        {this.props.visible && this.props.children}
       </div>
-    )
+    );
   }
 }
 
-module.exports = Modal
+module.exports = Modal;

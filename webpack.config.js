@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 module.exports = {
-  entry:  __dirname + '/app/index.js',
+  entry: __dirname + '/app/index.js',
   output: {
     path: __dirname + '/build',
     filename: 'index.js',
@@ -9,17 +9,20 @@ module.exports = {
   },
   plugins: [],
   module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader',
-      query: {
-        presets: ['react', 'es2015']
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['react', 'es2015']
+        }
+      },
+      {
+        test: /\.css/,
+        loaders: ['style-loader', 'css-loader']
       }
-    }, {
-      test: /\.css/,
-      loaders: ['style-loader', 'css-loader']
-    }]
+    ]
   },
   externals: [/^[a-z\-0-9]+$/]
-}
+};

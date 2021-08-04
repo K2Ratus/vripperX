@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-const store = require('./store')
+const store = require('./store');
 const workers = [
   // top priority
   require('./workers/VGThreadWorker'),
@@ -12,21 +12,21 @@ const workers = [
   // second tire
   require('./workers/ImgHostingWorker'),
   require('./workers/ImgWorker')
-]
+];
 
 const workersByType = workers.reduce((map, worker) => {
-  map[worker.type] = worker
-  return map
-}, {})
+  map[worker.type] = worker;
+  return map;
+}, {});
 
-function forId ($id) {
-  const task = store.getItem($id)
+function forId($id) {
+  const task = store.getItem($id);
   if (task) {
-    return workersByType[task.type]
+    return workersByType[task.type];
   }
 }
 
 // do not redefine module.exports for cyclical dependencies sake
-module.exports.workers = workers
-module.exports.workersByType = workersByType
-module.exports.forId = forId
+module.exports.workers = workers;
+module.exports.workersByType = workersByType;
+module.exports.forId = forId;

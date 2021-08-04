@@ -1,7 +1,7 @@
-'use strict'
-require('colors')
-const URL = require('url')
-const ImageHosting = require('../src/rippers/ImageHosting')
+'use strict';
+require('colors');
+const URL = require('url');
+const ImageHosting = require('../src/rippers/ImageHosting');
 
 const cases = {
   'fastpic.ru': {
@@ -120,21 +120,21 @@ const cases = {
   'imageho.me': {
     hosting: 'https://imageho.me/img-5914b89db9d6d.html',
     thumbnail: 'http://imageho.me/upload/small/2017/05/11/5914b89db9d2b.jpg',
-    origin: 'http://i.imageho.me/big/2017/05/11/5914b89db9d2b.jpg',
+    origin: 'http://i.imageho.me/big/2017/05/11/5914b89db9d2b.jpg'
     // no filename
   },
   'picpie.org': {
     hosting: 'https://picpie.org/image/kpng0m',
     thumbnail: 'https://picpie.org/images/2017/05/12/test-image.th.jpg',
     origin: 'https://picpie.org/images/2017/05/12/test-image.jpg',
-    name: "test-image.jpg"
+    name: 'test-image.jpg'
     // filename in PATH
   },
   'depic.me': {
     hosting: 'http://depic.me/i9i0rn6qyy3n',
     thumbnail: 'http://s9.dpic.me/02008/i9i0rn6qyy3n.jpg',
     origin: /s9\.dpic\.me\/[^\/]+\/test_image\.jpg/,
-    name: "test_image.jpg"
+    name: 'test_image.jpg'
     // filename in PATH and ALT
   },
   'imagevenue.com': {
@@ -154,7 +154,7 @@ const cases = {
   'picsee.net': {
     hosting: 'http://picsee.net/2017-05-24/60e329b31b5e.jpg.html',
     thumbnail: 'http://picsee.net/upload/2017-05-24/thumbnail/60e329b31b5e.jpg',
-    origin: 'http://picsee.net/upload/2017-05-24/60e329b31b5e.jpg',
+    origin: 'http://picsee.net/upload/2017-05-24/60e329b31b5e.jpg'
     // no filename
   },
   'imagezilla.net': {
@@ -169,37 +169,45 @@ const cases = {
     thumbnail: 'http://thumbnails103.imagebam.com/55021/911127550207816.jpg',
     origin: 'http://103.imagebam.com/download/4RKaeE0ch42T9KlRZ5yljA/55021/550207816/test-image.jpg',
     name: 'test-image.jpg'
-    // filename in PATH, bad ALT: 'loading' 
+    // filename in PATH, bad ALT: 'loading'
   }
-}
+};
 
 const test = (hosting) => {
-  const test = cases[hosting]
+  const test = cases[hosting];
 
-  test.hosting && ImageHosting(test.hosting, test.thumbnail, true).then((img) => {
-    if (test.origin) {
-      const originCheck = test.origin.test
-        ? test.origin.test(img.src)
-        : img.src && test.origin && URL.parse(img.src).pathname === URL.parse(test.origin).pathname
-      console.log(originCheck
-        ? `${hosting}: origin passed`.green
-        : `${hosting}: origin failed\nfound:\t\t${img.src}\nexpected:\t${test.origin}`.red)
-    }
-    if (test.name) {
-      const nameCheck = test.name === img.name
-      console.log(nameCheck
-        ? `${hosting}: name passed`.green
-        : `${hosting}: name failed\nfound:\t\t${img.name}\nexpected:\t${test.name}`.red)
-    }
-  }, (err) => {
-    console.log('ERROR'.red, hosting, err)
-  }).catch((err) => {
-    console.log('ERROR'.red, hosting, err)
-  })
-}
+  test.hosting &&
+    ImageHosting(test.hosting, test.thumbnail, true)
+      .then(
+        (img) => {
+          if (test.origin) {
+            const originCheck = test.origin.test
+              ? test.origin.test(img.src)
+              : img.src && test.origin && URL.parse(img.src).pathname === URL.parse(test.origin).pathname;
+            console.log(
+              originCheck
+                ? `${hosting}: origin passed`.green
+                : `${hosting}: origin failed\nfound:\t\t${img.src}\nexpected:\t${test.origin}`.red
+            );
+          }
+          if (test.name) {
+            const nameCheck = test.name === img.name;
+            console.log(
+              nameCheck ? `${hosting}: name passed`.green : `${hosting}: name failed\nfound:\t\t${img.name}\nexpected:\t${test.name}`.red
+            );
+          }
+        },
+        (err) => {
+          console.log('ERROR'.red, hosting, err);
+        }
+      )
+      .catch((err) => {
+        console.log('ERROR'.red, hosting, err);
+      });
+};
 
 const runAll = () => {
-  Object.keys(cases).forEach(test)
-}
+  Object.keys(cases).forEach(test);
+};
 
-runAll()
+runAll();

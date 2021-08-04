@@ -1,41 +1,41 @@
-'use strict'
+'use strict';
 
-const store = require('./store')
-const qRequest = require('./tools/qRequest')
-const { app, BrowserWindow } = require('electron')
-const settings = store.data._
+const store = require('./store');
+const qRequest = require('./tools/qRequest');
+const { app, BrowserWindow } = require('electron');
+const settings = store.data._;
 
-const URL = 'https://vipergirls.to/login.php'
+const URL = 'https://vipergirls.to/login.php';
 
-let promptWindow
+let promptWindow;
 
-function storeToJar () {
+function storeToJar() {
   if (settings.vgCookies && settings.vgCookies.length) {
     settings.vgCookies.forEach((cookie) => {
       try {
-        qRequest.jar.setCookie(cookie, URL)
-      } catch (e) { }
-    })
+        qRequest.jar.setCookie(cookie, URL);
+      } catch (e) {}
+    });
   }
 }
 
-function jarToStore () {
-  const vgCookies = qRequest.jar.getCookies(URL)
-  let vgLoggedIn = false
+function jarToStore() {
+  const vgCookies = qRequest.jar.getCookies(URL);
+  let vgLoggedIn = false;
   for (let cookie of vgCookies) {
     if (cookie.key === 'vg_userid') {
-      vgLoggedIn = true
-      break
+      vgLoggedIn = true;
+      break;
     }
   }
   if (vgLoggedIn) {
     store.update({
       vgCookies: vgCookies.map((cookie) => cookie.toString())
-    })
+    });
   }
 }
 
-function auth (credentials) {
+function auth(credentials) {
   return qRequest({
     url: URL,
     method: 'POST',
@@ -45,21 +45,24 @@ function auth (credentials) {
       vb_login_password: credentials.pass,
       cookieuser: 1
     }
-  }).then(() => {
-    jarToStore()
-    if (settings.vgCookies && settings.vgCookies.length) {
-      store.update({ autothanks: true })
-      promptWindow.webContents.send('allGood')
-    } else {
-      promptWindow.webContents.send('allBad')
+  }).then(
+    () => {
+      jarToStore();
+      if (settings.vgCookies && settings.vgCookies.length) {
+        store.update({ autothanks: true });
+        promptWindow.webContents.send('allGood');
+      } else {
+        promptWindow.webContents.send('allBad');
+      }
+    },
+    (err) => {
+      console.log(err);
+      promptWindow.webContents.send('allBad');
     }
-  }, (err) => {
-    console.log(err)
-    promptWindow.webContents.send('allBad')
-  })
+  );
 }
 
-function openAuth () {
+function openAuth() {
   promptWindow = new BrowserWindow({
     width: 300,
     height: 200,
@@ -67,20 +70,20 @@ function openAuth () {
     resizable: false,
     alwaysOnTop: true,
     title: 'ViperGirls authentication'
-  })
-  promptWindow.loadURL(`file://${app.getAppPath()}/app/auth.html`)
-  promptWindow.show()
+  });
+  promptWindow.loadURL(`file://${app.getAppPath()}/app/auth.html`);
+  promptWindow.show();
   promptWindow.on('closed', () => {
-    promptWindow = null
-  })
+    promptWindow = null;
+  });
 }
 
-function init () {
-  storeToJar()
+function init() {
+  storeToJar();
 }
 
 module.exports = {
   init,
   openAuth,
   auth
-}
+};

@@ -1,27 +1,29 @@
-'use strict'
+'use strict';
 
-const AbstractAlbumWorker = require('./AbstractAlbumWorker')
-const Imgur = require('../rippers/Imgur')
+const AbstractAlbumWorker = require('./AbstractAlbumWorker');
+const Imgur = require('../rippers/Imgur');
 
 class ImgurWorker extends AbstractAlbumWorker {
-  static get type () { return 'Imgur' }
-
-  static parseURL (url) {
-    return Imgur.parseURL(url)
+  static get type() {
+    return 'Imgur';
   }
 
-  static makeFolderName (task) {
-    return `imgur album${task.id}`
+  static parseURL(url) {
+    return Imgur.parseURL(url);
   }
 
-  static preload (task) {
+  static makeFolderName(task) {
+    return `imgur album${task.id}`;
+  }
+
+  static preload(task) {
     return Imgur.getAlbum(task.id).then((album) => {
-      task.title = `imgur album ${task.id} ${album.title || ''}`
-      return this.afterPreload(task, album.pics)
-    })
+      task.title = `imgur album ${task.id} ${album.title || ''}`;
+      return this.afterPreload(task, album.pics);
+    });
   }
 }
 
-ImgurWorker.initStatCounter()
+ImgurWorker.initStatCounter();
 
-module.exports = ImgurWorker
+module.exports = ImgurWorker;
